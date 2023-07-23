@@ -1,0 +1,114 @@
+---
+title: "Mar Casado PCA Validation"
+format: html
+editor: visual
+execute: 
+  message: false
+  warning: false
+---
+
+The aim of this document is to validate results of the ml.js package PCA method in JavaScript.
+
+**Data source:** Marcos Gonçalves da Silva, Juliana Nascimento Silva, Helena Rodrigues Fragoso, Natalia Pirani Ghilardi-Lopes (2019).Temporal series analysis of abiotic data for a subtropical Brazilian rocky shore. Data in Brief, Volume 24. ISSN 2352-3409, <https://doi.org/10.1016/j.dib.2019.103873>.
+
+### Attach packages
+
+```{r}
+library(corrr)
+library(GGally)
+library(recipes)
+library(tidytext)
+library(tidyverse)
+library(lubridate)
+```
+
+### Get data
+
+Read in the CSV, and add a column indicating "hot moist" and "cool dry" seasons according to authors.
+
+```{r}
+mc <- read_csv("marCasadoData.csv") |> 
+  mutate(season = dplyr::case_when(lubridate::month(month) %in% c(10, 11, 12, 1, 2, 3) ~ "hot moist", TRUE ~ "cool dry"))
+```
+
+### Explore correlations:
+
+```{r}
+marCasadoCorr <-  mc %>%
+  dplyr::select(-month, -season) %>%
+  correlate() %>%
+  rearrange()
+```
+
+### Make the PCA recipe:
+
+```{r}
+mc_recipe <-
+  recipe(~., data = mc) %>% 
+  update_role(month, season, new_role = "id") %>% 
+  step_normalize(all_predictors()) %>%
+  step_pca(all_predictors(), id = "pca") %>% 
+  prep()
+```
+
+### Do PCA: 
+
+```{r}
+mcPCA <- 
+  mc_recipe %>% 
+  tidy(id = "pca") 
+```
+
+### Create a table of loadings: 
+
+```{r}
+mcPCA |> select(-id) |> pivot_wider(id_cols = "terms", names_from = "component", values_from = "value")
+```
+
+### Visualize varianced explained by PC
+
+```{r}
+mc_recipe %>% 
+  tidy(id = "pca", type = "variance") %>% 
+  dplyr::filter(terms == "percent variance") %>% 
+  ggplot(aes(x = component, y = value)) + 
+  geom_col(fill = "#b6dfe2") + 
+  xlim(c(0, 5)) + 
+  ylab("% of total variance") +
+  theme_minimal()
+```
+
+### Create biplot
+
+```{r}
+
+pca_wider <- mcPCA %>% 
+  tidyr::pivot_wider(names_from = component, id_cols = terms)
+
+arrow_style <- arrow(length = unit(.05, "inches"),
+                     type = "closed")
+
+pca_plot <-
+  juice(mc_recipe) %>%
+  ggplot(aes(PC1, PC2)) +
+  geom_point(alpha = 1, 
+             size = 3,
+             aes(color = season)) + 
+  scale_color_manual(values = c("steelblue", "darkorange"))
+
+pca_plot +
+  geom_segment(data = pca_wider,
+               aes(xend = 5 * PC1, yend = 5 * PC2), 
+               x = 0, 
+               y = 0, 
+               arrow = arrow_style) + 
+  geom_text(data = pca_wider,
+            aes(x = 5 * PC1, y = 5 * PC2, label = terms), 
+            hjust = 0, 
+            vjust = 1,
+            size = 3, 
+            color = '#0A537D') + 
+  theme_minimal()
+```
+
+\

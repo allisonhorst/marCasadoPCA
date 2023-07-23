@@ -7,7 +7,7 @@ execute:
   warning: false
 ---
 
-The aim of this document is to validate results of the ml.js package PCA method in JavaScript.
+The aim of this document is to validate results of the ml.js package PCA method in JavaScript for an Observable course on [Data Science Workflows in JavaScript (Session 3)](https://observablehq.com/@observablehq/ds-workflows-in-js-session-3-key). This example closely follows the example from the [palmerpenguins package documentation](https://allisonhorst.github.io/palmerpenguins/articles/pca.html).
 
 **Data source:** Marcos Gonçalves da Silva, Juliana Nascimento Silva, Helena Rodrigues Fragoso, Natalia Pirani Ghilardi-Lopes (2019).Temporal series analysis of abiotic data for a subtropical Brazilian rocky shore. Data in Brief, Volume 24. ISSN 2352-3409, <https://doi.org/10.1016/j.dib.2019.103873>.
 
@@ -51,7 +51,7 @@ mc_recipe <-
   prep()
 ```
 
-### Do PCA: 
+### Do PCA:
 
 ```{r}
 mcPCA <- 
@@ -59,7 +59,7 @@ mcPCA <-
   tidy(id = "pca") 
 ```
 
-### Create a table of loadings: 
+### Create a table of loadings:
 
 ```{r}
 mcPCA |> select(-id) |> pivot_wider(id_cols = "terms", names_from = "component", values_from = "value")
@@ -72,9 +72,9 @@ mc_recipe %>%
   tidy(id = "pca", type = "variance") %>% 
   dplyr::filter(terms == "percent variance") %>% 
   ggplot(aes(x = component, y = value)) + 
-  geom_col(fill = "#b6dfe2") + 
-  xlim(c(0, 5)) + 
-  ylab("% of total variance") +
+  geom_col() + 
+  xlim(c(0, 10)) + 
+  ylab("% Total Variance") +
   theme_minimal()
 ```
 

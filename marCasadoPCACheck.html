@@ -94,7 +94,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>The aim of this document is to validate results of the ml.js package PCA method in JavaScript.</p>
+<p>The aim of this document is to validate results of the ml.js package PCA method in JavaScript for an Observable course on <a href="https://observablehq.com/@observablehq/ds-workflows-in-js-session-3-key">Data Science Workflows in JavaScript (Session 3)</a>. This example closely follows the example from the <a href="https://allisonhorst.github.io/palmerpenguins/articles/pca.html">palmerpenguins package documentation</a>.</p>
 <p><strong>Data source:</strong> Marcos Gonçalves da Silva, Juliana Nascimento Silva, Helena Rodrigues Fragoso, Natalia Pirani Ghilardi-Lopes (2019).Temporal series analysis of abiotic data for a subtropical Brazilian rocky shore. Data in Brief, Volume 24. ISSN 2352-3409, <a href="https://doi.org/10.1016/j.dib.2019.103873" class="uri">https://doi.org/10.1016/j.dib.2019.103873</a>.</p>
 <section id="attach-packages" class="level3">
 <h3 class="anchored" data-anchor-id="attach-packages">Attach packages</h3>
@@ -171,9 +171,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>(<span class="at">id =</span> <span class="st">"pca"</span>, <span class="at">type =</span> <span class="st">"variance"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(terms <span class="sc">==</span> <span class="st">"percent variance"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> component, <span class="at">y =</span> value)) <span class="sc">+</span> </span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"#b6dfe2"</span>) <span class="sc">+</span> </span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>)) <span class="sc">+</span> </span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"% of total variance"</span>) <span class="sc">+</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span> </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>)) <span class="sc">+</span> </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"% Total Variance"</span>) <span class="sc">+</span></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="marCasadoPCACheck_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
